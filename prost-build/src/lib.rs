@@ -232,6 +232,7 @@ pub struct Config {
     extern_paths: Vec<(String, String)>,
     protoc_args: Vec<OsString>,
     disable_comments: PathMap<()>,
+    unknown_fields_messages: Vec<String>,
 }
 
 impl Config {
@@ -680,6 +681,15 @@ impl Config {
         self
     }
 
+    pub fn unknown_fields_message<S>(&mut self, message: S) -> &mut Self
+    where
+        S: AsRef<str>,
+    {
+        self.unknown_fields_messages
+            .push(message.as_ref().to_owned());
+        self
+    }
+
     /// Compile `.proto` files into Rust files during a Cargo build with additional code generator
     /// configuration options.
     ///
@@ -847,6 +857,7 @@ impl default::Default for Config {
             extern_paths: Vec::new(),
             protoc_args: Vec::new(),
             disable_comments: PathMap::default(),
+            unknown_fields_messages: Vec::new(),
         }
     }
 }
