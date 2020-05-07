@@ -18,7 +18,7 @@ use crate::ast::{Comments, Method, Service};
 use crate::extern_paths::ExternPaths;
 use crate::ident::{match_ident, to_snake, to_upper_camel};
 use crate::message_graph::MessageGraph;
-use crate::Config;
+use crate::{Config, FieldData};
 
 #[derive(PartialEq)]
 enum Syntax {
@@ -277,7 +277,14 @@ impl<'a> CodeGenerator<'a> {
         let repeated = field.label == Some(Label::Repeated as i32);
         let deprecated = self.deprecated(&field);
         let optional = self.optional(&field);
-        let ty = self.resolve_type(&field);
+
+        let mut field_name = to_snake(&field.name());
+        let mut ty = self.resolve_type(&field);
+        (self.config.field_override)(FieldData {
+            field_name: &mut field_name,
+            field_type: &mut ty,
+            field_descriptor: &field,
+        });
 
         let boxed = !repeated
             && (type_ == Type::Message || type_ == Type::Group)
@@ -285,9 +292,7 @@ impl<'a> CodeGenerator<'a> {
 
         debug!(
             "    field: {:?}, type: {:?}, boxed: {}",
-            field.name(),
-            ty,
-            boxed
+            field_name, ty, boxed
         );
 
         self.append_doc();
@@ -363,10 +368,10 @@ impl<'a> CodeGenerator<'a> {
         }
 
         self.buf.push_str("\")]\n");
-        self.append_field_attributes(msg_name, field.name());
+        self.append_field_attributes(msg_name, &field_name);
         self.push_indent();
         self.buf.push_str("pub ");
-        self.buf.push_str(&to_snake(field.name()));
+        self.buf.push_str(&field_name);
         self.buf.push_str(": ");
         if repeated {
             self.buf.push_str("::std::vec::Vec<");

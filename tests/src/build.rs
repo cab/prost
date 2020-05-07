@@ -92,6 +92,16 @@ fn main() {
         )
         .unwrap();
 
+    config
+        .field_override(|data| {
+            if data.field_type == "MessageToOverride" {
+                data.field_type.clear();
+                data.field_type.push_str("OverriddenMessage");
+            }
+        })
+        .compile_protos(&[src.join("field_override.proto")], includes)
+        .unwrap();
+
     // Check that attempting to compile a .proto without a package declaration results in an error.
     config
         .compile_protos(&[src.join("no_package.proto")], includes)

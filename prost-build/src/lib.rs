@@ -122,7 +122,7 @@ use std::process::Command;
 
 use log::trace;
 use prost::Message;
-use prost_types::{FileDescriptorProto, FileDescriptorSet};
+use prost_types::{FieldDescriptorProto, FileDescriptorProto, FileDescriptorSet};
 
 pub use crate::ast::{Comments, Method, Service};
 use crate::code_generator::CodeGenerator;
@@ -177,6 +177,12 @@ pub trait ServiceGenerator {
     fn finalize_package(&mut self, _package: &str, _buf: &mut String) {}
 }
 
+pub struct FieldData<'a> {
+    pub field_name: &'a mut String,
+    pub field_type: &'a mut String,
+    pub field_descriptor: &'a FieldDescriptorProto,
+}
+
 /// Configuration options for Protobuf code generation.
 ///
 /// This configuration builder can be used to set non-default code generation options.
@@ -189,6 +195,7 @@ pub struct Config {
     strip_enum_prefix: bool,
     out_dir: Option<PathBuf>,
     extern_paths: Vec<(String, String)>,
+    field_override: Box<dyn FnMut(FieldData)>,
 }
 
 impl Config {
@@ -484,6 +491,14 @@ impl Config {
         self
     }
 
+    pub fn field_override<F>(&mut self, override_fn: F) -> &mut Self
+    where
+        F: FnMut(FieldData<'_>) + 'static,
+    {
+        self.field_override = Box::new(override_fn);
+        self
+    }
+
     /// Compile `.proto` files into Rust files during a Cargo build with additional code generator
     /// configuration options.
     ///
@@ -626,6 +641,7 @@ impl default::Default for Config {
             strip_enum_prefix: true,
             out_dir: None,
             extern_paths: Vec::new(),
+            field_override: Box::new(|_| {}),
         }
     }
 }

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package field_override;
+
+message BaseMessage {
+    // This type will be overridden in code generation.
+    MessageToOverride msg = 1;
+}
+
+message MessageToOverride {}
+
+message OverriddenMessage {}
