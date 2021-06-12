@@ -802,6 +802,7 @@ impl Config {
             .map_err(|error| Error::new(ErrorKind::InvalidInput, error))?;
 
         for file in files {
+            eprintln!("wtf {:#?}", file.message_type.iter().map(|e| e).collect::<Vec<_>>());
             let module = self.module(&file);
 
             // Only record packages that have services
@@ -1032,5 +1033,14 @@ mod tests {
         assert_eq!(&state.service_names, &["Greeting", "Farewell"]);
         assert_eq!(&state.package_names, &["helloworld"]);
         assert_eq!(state.finalized, 3);
+    }
+
+    #[test]
+    fn extensions() {
+        let _ = env_logger::try_init();
+
+        Box::new(Config::new())
+            .compile_protos(&["src/extensions.proto"], &["src"])
+            .unwrap();
     }
 }

@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package ext;
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.FieldOptions {
+  optional int32 max_length = 30001;
+}
+
+message Hello {
+  optional string name = 1 [(ext.max_length) = 10];
+}
