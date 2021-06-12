@@ -218,7 +218,7 @@ impl<'a> CodeGenerator<'a> {
             .unknown_fields_messages
             .iter()
             // Skip the leading '.' when matching
-            .any(|m| m == &fq_message_name[1..])
+            .any(|m| m == &fq_message_name[1..] || m == ".")
         {
             self.push_indent();
             self.buf.push_str("#[prost(unknown_fields)]\n");
