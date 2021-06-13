@@ -12,6 +12,20 @@ pub struct Version {
     #[prost(string, optional, tag="4")]
     pub suffix: ::core::option::Option<::prost::alloc::string::String>,
 }
+impl Version {
+        pub fn major_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn minor_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn patch_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn suffix_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// An encoded CodeGeneratorRequest is written to the plugin's stdin.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CodeGeneratorRequest {
@@ -43,6 +57,20 @@ pub struct CodeGeneratorRequest {
     #[prost(message, optional, tag="3")]
     pub compiler_version: ::core::option::Option<Version>,
 }
+impl CodeGeneratorRequest {
+        pub fn file_to_generate_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn parameter_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn proto_file_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn compiler_version_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// The plugin writes an encoded CodeGeneratorResponse to stdout.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CodeGeneratorResponse {
@@ -62,6 +90,17 @@ pub struct CodeGeneratorResponse {
     pub supported_features: ::core::option::Option<u64>,
     #[prost(message, repeated, tag="15")]
     pub file: ::prost::alloc::vec::Vec<code_generator_response::File>,
+}
+impl CodeGeneratorResponse {
+        pub fn error_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn supported_features_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn file_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// Nested message and enum types in `CodeGeneratorResponse`.
 pub mod code_generator_response {
@@ -129,6 +168,20 @@ pub mod code_generator_response {
         #[prost(message, optional, tag="16")]
         pub generated_code_info: ::core::option::Option<super::super::GeneratedCodeInfo>,
     }
+impl File {
+                pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn insertion_point_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn content_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn generated_code_info_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+}
     /// Sync with code_generator.h.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]

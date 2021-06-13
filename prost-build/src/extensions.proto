@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package ext;
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.FieldOptions {
+  optional bool required = 30004;
+  optional uint32 max = 30005;
+}
+
+message HelloWorld {
+  optional string name = 1 [(ext.required) = true, (ext.max) = 100];
+}

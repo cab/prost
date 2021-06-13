@@ -319,6 +319,13 @@ fn word_attr(key: &str, attr: &Meta) -> bool {
     }
 }
 
+pub(super) fn options_attr(attr: &Meta) -> Result<Option<()>, Error> {
+    if !attr.path().is_ident("options") {
+        return Ok(None);
+    }
+    Ok(Some(()))
+}
+
 pub(super) fn tag_attr(attr: &Meta) -> Result<Option<u32>, Error> {
     if !attr.path().is_ident("tag") {
         return Ok(None);

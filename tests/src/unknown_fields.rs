@@ -19,7 +19,7 @@ fn test_access_unknown_field() {
         message.protobuf_unknown_fields,
         vec![UnknownField {
             tag: 2,
-            value: b"extra".to_vec()
+            value: encode_str("extra")
         }]
     );
 }
@@ -41,6 +41,14 @@ fn test_serialize_unknown_field() {
     assert_eq!(message.extra_field, "extra");
 }
 
+fn encode_str(s: &str) -> Vec<u8> {
+    let mut buf = Vec::new();
+    prost::encoding::encode_varint(s.len() as u64, &mut buf);
+    use bytes::BufMut;
+    buf.put_slice(s.as_bytes());
+    buf
+}
+
 #[test]
 fn test_access_repeated_unknown_field() {
     let message = unknown_fields::MessageWithRepeatedExtraFields {
@@ -56,20 +64,21 @@ fn test_access_repeated_unknown_field() {
     let message = unknown_fields::MessageWithUnknownFields::decode(&encoded[..])
         .expect("Could not decode as MessageWithUnknownFields");
 
+
     assert_eq!(
         message.protobuf_unknown_fields,
         vec![
             UnknownField {
                 tag: 2,
-                value: b"repeated".to_vec(),
+                value: encode_str("repeated"),
             },
             UnknownField {
                 tag: 2,
-                value: b"extra".to_vec(),
+                value: encode_str("extra"),
             },
             UnknownField {
                 tag: 2,
-                value: b"repeated".to_vec(),
+                value: encode_str("repeated"),
             },
         ]
     );

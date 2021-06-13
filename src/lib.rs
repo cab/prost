@@ -5,11 +5,14 @@
 #[doc(hidden)]
 pub extern crate alloc;
 
+use std::ops::Index;
+
 // Re-export the bytes crate for use within derived code.
 #[doc(hidden)]
 pub use bytes;
 
 mod error;
+mod extensions;
 mod message;
 mod types;
 
@@ -17,6 +20,7 @@ mod types;
 pub mod encoding;
 
 pub use crate::error::{DecodeError, EncodeError};
+pub use crate::extensions::Extension;
 pub use crate::message::{Message, UnknownField};
 
 use bytes::{Buf, BufMut};
@@ -78,6 +82,45 @@ where
         ));
     }
     Ok(length as usize)
+}
+
+pub fn decode_options(input: &str) -> Option<Vec<(u32, Vec<Vec<u8>>)>> {
+    input
+        .split(";")
+        .map(|piece| {
+            let mut pieces = piece.split(":");
+            let tag = pieces.next()?;
+            let encoded = pieces.next()?;
+            let tag = tag.parse::<u32>().ok()?;
+            let decoded: Vec<Vec<u8>> = encoded
+                .split(".")
+                .map(|piece| base64::decode(piece).ok())
+                .collect::<Option<Vec<_>>>()?;
+            Some((tag, decoded))
+        })
+        .collect::<Option<Vec<(u32, Vec<Vec<u8>>)>>>()
+}
+
+pub fn encode_options(extensions: &Vec<UnknownField>) -> String {
+    let mut grouped = std::collections::HashMap::<u32, Vec<&[u8]>>::new();
+    for extension in extensions {
+        grouped
+            .entry(extension.tag)
+            .or_insert(Vec::new())
+            .push(&extension.value);
+    }
+    grouped
+        .into_iter()
+        .map(|(tag, values)| {
+            let value = values
+                .into_iter()
+                .map(base64::encode)
+                .collect::<Vec<_>>()
+                .join(".");
+            format!("{}:{}", tag, value)
+        })
+        .collect::<Vec<_>>()
+        .join(";")
 }
 
 // Re-export #[derive(Message, Enumeration, Oneof)].

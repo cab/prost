@@ -6,6 +6,7 @@ use proc_macro2::{Span, TokenStream};
 use quote::{quote, ToTokens, TokenStreamExt};
 use syn::{parse_str, Ident, Lit, LitByteStr, Meta, MetaList, MetaNameValue, NestedMeta, Path};
 
+use crate::field::options_attr;
 use crate::field::{bool_attr, set_option, tag_attr, Label};
 
 /// A scalar protobuf field.
@@ -37,6 +38,7 @@ impl Field {
                 set_option(&mut label, l, "duplicate label attributes")?;
             } else if let Some(d) = DefaultValue::from_attr(attr)? {
                 set_option(&mut default, d, "duplicate default attributes")?;
+            } else if let Some(l) = options_attr(attr)? {
             } else {
                 unknown_attrs.push(attr);
             }

@@ -15,6 +15,10 @@ impl<T> PathMap<T> {
         self.matchers.insert(matcher, value);
     }
 
+    pub(crate) fn matches(&self, fq_path: &'_ str, field: Option<&'_ str>) -> bool {
+        self.get(fq_path).is_some() || field.and_then(|field_name| self.get_field(fq_path, field_name)).is_some()
+    }
+
     /// Returns the value which matches the provided fully-qualified Protobuf path.
     pub(crate) fn get(&self, fq_path: &'_ str) -> Option<&T> {
         // First, try matching the full path.

@@ -232,7 +232,7 @@ pub struct Config {
     extern_paths: Vec<(String, String)>,
     protoc_args: Vec<OsString>,
     disable_comments: PathMap<()>,
-    unknown_fields_messages: Vec<String>,
+    unknown_fields_messages: PathMap<()>,
 }
 
 impl Config {
@@ -686,7 +686,7 @@ impl Config {
         S: AsRef<str>,
     {
         self.unknown_fields_messages
-            .push(message.as_ref().to_owned());
+            .insert(message.as_ref().to_owned(), ());
         self
     }
 
@@ -857,7 +857,7 @@ impl default::Default for Config {
             extern_paths: Vec::new(),
             protoc_args: Vec::new(),
             disable_comments: PathMap::default(),
-            unknown_fields_messages: Vec::new(),
+            unknown_fields_messages: PathMap::default(),
         }
     }
 }
@@ -1043,5 +1043,14 @@ mod tests {
         assert_eq!(&state.service_names, &["Greeting", "Farewell"]);
         assert_eq!(&state.package_names, &["helloworld"]);
         assert_eq!(state.finalized, 3);
+    }
+
+    #[test]
+    fn extensions() {
+        let _ = env_logger::try_init();
+
+        Config::new()
+            .compile_protos(&["src/extensions.proto"], &["src"])
+            .unwrap();
     }
 }

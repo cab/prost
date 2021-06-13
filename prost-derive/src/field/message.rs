@@ -3,7 +3,7 @@ use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::Meta;
 
-use crate::field::{set_bool, set_option, tag_attr, word_attr, Label};
+use crate::field::{options_attr, set_bool, set_option, tag_attr, word_attr, Label};
 
 #[derive(Clone)]
 pub struct Field {
@@ -29,6 +29,7 @@ impl Field {
                 set_option(&mut tag, t, "duplicate tag attributes")?;
             } else if let Some(l) = Label::from_attr(attr) {
                 set_option(&mut label, l, "duplicate label attributes")?;
+            } else if let Some(l) = options_attr(attr)? {
             } else {
                 unknown_attrs.push(attr);
             }

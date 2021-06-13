@@ -22,6 +22,7 @@ fn bootstrap() {
 
     prost_build::Config::new()
         .compile_well_known_types()
+        .unknown_fields_message("FieldOptions")
         .btree_map(&["."])
         .out_dir(tempdir.path())
         .compile_protos(

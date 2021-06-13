@@ -6,6 +6,7 @@ use std::iter;
 use itertools::{Either, Itertools};
 use log::debug;
 use multimap::MultiMap;
+use prost::UnknownField;
 use prost_types::field_descriptor_proto::{Label, Type};
 use prost_types::source_code_info::Location;
 use prost_types::{
@@ -82,6 +83,14 @@ impl<'a> CodeGenerator<'a> {
         );
 
         code_gen.path.push(4);
+        for (idx, message) in file.extension.into_iter().enumerate() {
+            code_gen.path.push(idx as i32);
+            code_gen.append_extension(message);
+            code_gen.path.pop();
+        }
+        code_gen.path.pop();
+
+        code_gen.path.push(4);
         for (idx, message) in file.message_type.into_iter().enumerate() {
             code_gen.path.push(idx as i32);
             code_gen.append_message(message);
@@ -111,6 +120,52 @@ impl<'a> CodeGenerator<'a> {
 
             code_gen.path.pop();
         }
+    }
+
+    fn append_extension(&mut self, extension: FieldDescriptorProto) {
+        let extension_name = format!("{}Ext", extension.name().to_string());
+        let fq_extension_name = format!(".{}.{}", self.package, extension_name);
+        let ty = self.resolve_type(&extension, &fq_extension_name);
+
+        self.buf.push_str("pub struct ");
+        self.buf.push_str(&to_upper_camel(&extension_name));
+        self.buf.push_str(" {\n");
+        self.buf.push_str("}\n");
+        self.buf.push_str("impl ::prost::Extension for ");
+        self.buf.push_str(&to_upper_camel(&extension_name));
+        self.buf.push_str(" {\n");
+        self.depth += 1;
+        // type
+        self.push_indent();
+        self.buf.push_str("type Value = ");
+        self.buf.push_str(&ty);
+        self.buf.push_str(";\n");
+        // field number
+        self.push_indent();
+        self.buf.push_str("const NUMBER: u32 = ");
+        self.buf.push_str(&extension.number().to_string());
+        self.buf.push_str(";\n");
+        self.depth -= 1;
+        self.buf.push_str("}\n");
+        //         trait Extension {
+        //     type Value;
+        //     const NUMBER: i32;
+
+        //     fn parse_value(data: &[u8]) -> Self::Value;
+        // }
+
+        // pub struct MaxLength {
+
+        // }
+
+        // impl Extension for MaxLength {
+        //     type Value = i32;
+        //     const NUMBER: i32 = 30001;
+
+        //     fn parse_value(data: &[u8]) -> Self::Value {
+        //         1
+        //     }
+        // }
     }
 
     fn append_message(&mut self, message: DescriptorProto) {
@@ -182,8 +237,8 @@ impl<'a> CodeGenerator<'a> {
 
         self.depth += 1;
         self.path.push(2);
-        for (field, idx) in fields {
-            self.path.push(idx as i32);
+        for (field, idx) in &fields {
+            self.path.push(*idx as i32);
             match field
                 .type_name
                 .as_ref()
@@ -216,12 +271,11 @@ impl<'a> CodeGenerator<'a> {
         if self
             .config
             .unknown_fields_messages
-            .iter()
-            // Skip the leading '.' when matching
-            .any(|m| m == &fq_message_name[1..] || m == ".")
+            .matches(&fq_message_name, None)
         {
             self.push_indent();
             self.buf.push_str("#[prost(unknown_fields)]\n");
+            self.append_field_attributes(&fq_message_name, "protobuf_unknown_fields");
             self.push_indent();
             self.buf
                 .push_str("pub protobuf_unknown_fields: Vec<::prost::UnknownField>,\n");
@@ -230,6 +284,106 @@ impl<'a> CodeGenerator<'a> {
         self.depth -= 1;
         self.push_indent();
         self.buf.push_str("}\n");
+
+        self.path.push(4);
+        self.buf.push_str("impl ");
+        self.buf.push_str(&to_upper_camel(&message_name));
+        self.buf.push_str(" {\n");
+        self.depth += 1;
+
+        self.push_indent();
+        // self.buf.push_str("pub const FULLY_QUALIFIED_NAME: &'static str = \"");
+        // self.buf.push_str(&fq_message_name);
+        // self.buf.push_str("\";");
+
+        for (field, idx) in &fields {
+            self.push_indent();
+            self.buf.push_str("pub fn ");
+            self.buf.push_str(&to_snake(field.name()));
+            self.buf.push_str(
+                "_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {\n",
+            );
+            self.depth += 1;
+
+            if let Some(extensions) = field
+                .options
+                .as_ref()
+                .map(|opt| &opt.protobuf_unknown_fields)
+            {
+                let mut grouped = std::collections::HashMap::<u32, Vec<&[u8]>>::new();
+                for extension in extensions {
+                    grouped
+                        .entry(extension.tag)
+                        .or_insert(Vec::new())
+                        .push(&extension.value);
+                }
+
+                self.push_indent();
+                self.buf.push_str("use ::prost::Message;\n");
+
+                self.push_indent();
+                self.buf.push_str("match E::NUMBER {\n");
+                self.depth += 1;
+
+                for (tag, values) in grouped {
+                    self.push_indent();
+                    self.buf.push_str(&tag.to_string());
+                    self.buf.push_str(" => {\n");
+                    self.depth += 1;
+                    let head = values.first().unwrap();
+                    let tail = &values[1..];
+
+                    self.push_indent();
+                    self.buf.push_str(
+                        "let mut message = E::Value::decode_length_delimited::<&[u8]>(&[",
+                    );
+                    let bytes = head.iter().map(|b| b.to_string()).join(", ");
+                    self.buf.push_str(&bytes);
+                    // self.buf.push_str("]).unwrap();\n");
+                    self.buf.push_str("]).ok()?;\n");
+
+                    for value in tail {
+                        self.push_indent();
+                        self.buf
+                            .push_str("message.merge_length_delimited::<&[u8]>(&[");
+                        let bytes = value.iter().map(|b| b.to_string()).join(", ");
+                        self.buf.push_str(&bytes);
+                        // self.buf.push_str("]).unwrap();\n");
+                        self.buf.push_str("]).ok()?;\n");
+                    }
+
+                    self.push_indent();
+                    self.buf.push_str("::std::option::Option::Some(message)\n");
+
+                    self.depth -= 1;
+                    self.push_indent();
+                    self.buf.push_str("},\n");
+                }
+
+                self.push_indent();
+                self.buf.push_str("_ => None\n");
+
+                self.depth -= 1;
+                self.push_indent();
+                self.buf.push_str("}\n");
+
+                /*
+                match E::NUMBER {
+
+                }
+                */
+            } else {
+                self.push_indent();
+                self.buf.push_str("None\n");
+            }
+
+            self.depth -= 1;
+            self.push_indent();
+            self.buf.push_str("}\n");
+        }
+        self.depth -= 1;
+        self.buf.push_str("}\n");
+        self.path.pop();
 
         if !message.enum_type.is_empty() || !nested_types.is_empty() || !oneof_fields.is_empty() {
             self.push_mod(&message_name);
@@ -288,7 +442,7 @@ impl<'a> CodeGenerator<'a> {
         }
     }
 
-    fn append_field(&mut self, fq_message_name: &str, field: FieldDescriptorProto) {
+    fn append_field(&mut self, fq_message_name: &str, field: &FieldDescriptorProto) {
         let type_ = field.r#type();
         let repeated = field.label == Some(Label::Repeated as i32);
         let deprecated = self.deprecated(&field);
@@ -378,7 +532,6 @@ impl<'a> CodeGenerator<'a> {
                         .as_ref()
                         .and_then(|ty| ty.split('.').last())
                         .unwrap();
-
                     strip_enum_prefix(&to_upper_camel(&enum_type), &enum_value)
                 } else {
                     &enum_value
@@ -389,6 +542,18 @@ impl<'a> CodeGenerator<'a> {
                 // safer, we should unescape the Protobuf string and re-escape it with the Rust
                 // escaping mechanisms.
                 self.buf.push_str(default);
+            }
+        }
+
+        if let Some(extensions) = field
+            .options
+            .as_ref()
+            .map(|opt| &opt.protobuf_unknown_fields)
+        {
+            let encoded = prost::encode_options(extensions);
+            if !encoded.is_empty() {
+                self.buf.push_str("\", options=\"");
+                self.buf.push_str(&encoded);
             }
         }
 
@@ -419,7 +584,7 @@ impl<'a> CodeGenerator<'a> {
     fn append_map_field(
         &mut self,
         fq_message_name: &str,
-        field: FieldDescriptorProto,
+        field: &FieldDescriptorProto,
         key: &FieldDescriptorProto,
         value: &FieldDescriptorProto,
     ) {
@@ -444,7 +609,6 @@ impl<'a> CodeGenerator<'a> {
             .unwrap_or_default();
         let key_tag = self.field_type_tag(key);
         let value_tag = self.map_value_type_tag(value);
-
         self.buf.push_str(&format!(
             "#[prost({}=\"{}, {}\", tag=\"{}\")]\n",
             map_type.annotation(),
@@ -579,14 +743,7 @@ impl<'a> CodeGenerator<'a> {
     }
 
     fn append_doc(&mut self, fq_name: &str, field_name: Option<&str>) {
-        let append_doc = if let Some(field_name) = field_name {
-            self.config
-                .disable_comments
-                .get_field(fq_name, field_name)
-                .is_none()
-        } else {
-            self.config.disable_comments.get(fq_name).is_none()
-        };
+        let append_doc = !self.config.disable_comments.matches(fq_name, field_name);
         if append_doc {
             Comments::from_location(self.location()).append_with_indent(self.depth, &mut self.buf)
         }
@@ -840,7 +997,6 @@ impl<'a> CodeGenerator<'a> {
         if field.proto3_optional.unwrap_or(false) {
             return true;
         }
-
         if field.label() != Label::Optional {
             return false;
         }
@@ -862,23 +1018,23 @@ impl<'a> CodeGenerator<'a> {
 
 /// Returns `true` if the repeated field type can be packed.
 fn can_pack(field: &FieldDescriptorProto) -> bool {
-    matches!(
-        field.r#type(),
+    match field.r#type() {
         Type::Float
-            | Type::Double
-            | Type::Int32
-            | Type::Int64
-            | Type::Uint32
-            | Type::Uint64
-            | Type::Sint32
-            | Type::Sint64
-            | Type::Fixed32
-            | Type::Fixed64
-            | Type::Sfixed32
-            | Type::Sfixed64
-            | Type::Bool
-            | Type::Enum
-    )
+        | Type::Double
+        | Type::Int32
+        | Type::Int64
+        | Type::Uint32
+        | Type::Uint64
+        | Type::Sint32
+        | Type::Sint64
+        | Type::Fixed32
+        | Type::Fixed64
+        | Type::Sfixed32
+        | Type::Sfixed64
+        | Type::Bool
+        | Type::Enum => true,
+        _ => false,
+    }
 }
 
 /// Based on [`google::protobuf::UnescapeCEscapeString`][1]
@@ -1081,4 +1237,95 @@ mod tests {
         assert_eq!(strip_enum_prefix("Foo", "Bar"), "Bar");
         assert_eq!(strip_enum_prefix("Foo", "Foo1"), "Foo1");
     }
+
+    #[test]
+    fn f() {
+        use crate::Message;
+        let t = true;
+        let mut vec = Vec::new();
+        t.encode(&mut vec).unwrap();
+        eprintln!("wtf {:?}", vec);
+
+        let t = "test".to_owned();
+        let mut vec = Vec::new();
+        t.encode(&mut vec).unwrap();
+        eprintln!("wtf {:?}", vec);
+
+        let t = 1f32;
+        let mut vec = Vec::new();
+        t.encode(&mut vec).unwrap();
+        eprintln!("wtf {:?}: {:?}", t, vec);
+
+        let t = 1 as u64;
+        let mut vec = Vec::new();
+        t.encode(&mut vec).unwrap();
+        eprintln!("wtf {:?}", vec);
+
+        let data = &[0u8, 1u8] as &[u8];
+        <bool as Message>::decode(data).unwrap();
+    }
+
+    //      #[test]
+    //    fn extensions() {
+    //        let _ = env_logger::try_init();
+
+    //        Config::new()
+    //            .compile_protos(&["src/extensions.proto"], &["src"])
+    //            .unwrap();
+
+    // trait Extension {
+    //     type Value: prost::Message + Default;
+    //     const NUMBER: i32;
+
+    //     fn parse_value(data: &[u8]) -> Self::Value;
+    // }
+
+    // pub struct MaxLength {
+
+    // }
+
+    // impl Extension for MaxLength {
+    //     type Value = i32;
+    //     const NUMBER: i32 = 30001;
+
+    //     fn parse_value(data: &[u8]) -> Self::Value {
+    //         1
+    //     }
+    // }
+
+    // #[derive(Clone, PartialEq, ::prost::Message)]
+    // pub struct Hello {
+    //     #[prost(string, optional, tag="1")]
+    //     pub name: ::std::option::Option<std::string::String>,
+    //     #[prost(string, optional, tag="2")]
+    //     pub greeting: ::std::option::Option<std::string::String>,
+    //     #[prost(string, optional, tag="3")]
+    //     pub salutation: ::std::option::Option<std::string::String>,
+    // }
+
+    // use std::collections::HashMap;
+
+    // lazy_static::lazy_static! {
+    //     static ref Hello_EXTENSIONS: HashMap<i32, HashMap<i32, &'static [u8]>> = {
+    //         let mut m = HashMap::new();
+    //         m.insert(3, {
+    //             let mut data = HashMap::new();
+    //             data.insert(30001, &[] as &[u8]);
+    //             data
+    //         });
+    //         m
+    //     };
+    // }
+
+    // impl Hello {
+    //     fn read_ext_name<E>() -> Option<E::Value> where E: Extension + ?Sized {
+    //         use ::prost::Message;
+    //         E::Value::decode(Hello_EXTENSIONS.get(&3)?.get(&E::NUMBER)?.clone()).ok()
+    //     }
+    // }
+
+    //     let max_length = Hello::read_ext_name::<MaxLength>().unwrap();
+    //     assert_eq!(max_length, 10);
+
+    //    }
 }

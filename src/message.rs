@@ -179,11 +179,9 @@ pub struct UnknownField {
     pub value: Vec<u8>,
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     const _MESSAGE_IS_OBJECT_SAFE: Option<&dyn Message> = None;
 }
-

@@ -5,6 +5,11 @@ pub struct FileDescriptorSet {
     #[prost(message, repeated, tag="1")]
     pub file: ::prost::alloc::vec::Vec<FileDescriptorProto>,
 }
+impl FileDescriptorSet {
+        pub fn file_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// Describes a complete .proto file.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FileDescriptorProto {
@@ -46,6 +51,44 @@ pub struct FileDescriptorProto {
     #[prost(string, optional, tag="12")]
     pub syntax: ::core::option::Option<::prost::alloc::string::String>,
 }
+impl FileDescriptorProto {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn package_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn dependency_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn public_dependency_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn weak_dependency_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn message_type_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn enum_type_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn service_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn extension_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn source_code_info_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn syntax_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// Describes a message type.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DescriptorProto {
@@ -72,6 +115,38 @@ pub struct DescriptorProto {
     #[prost(string, repeated, tag="10")]
     pub reserved_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+impl DescriptorProto {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn field_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn extension_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn nested_type_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn enum_type_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn extension_range_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn oneof_decl_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn reserved_range_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn reserved_name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// Nested message and enum types in `DescriptorProto`.
 pub mod descriptor_proto {
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -85,6 +160,17 @@ pub mod descriptor_proto {
         #[prost(message, optional, tag="3")]
         pub options: ::core::option::Option<super::ExtensionRangeOptions>,
     }
+impl ExtensionRange {
+                pub fn start_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn end_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+}
     /// Range of reserved tag numbers. Reserved tag numbers may not be used by
     /// fields or extension ranges in the same message. Reserved ranges may
     /// not overlap.
@@ -97,12 +183,25 @@ pub mod descriptor_proto {
         #[prost(int32, optional, tag="2")]
         pub end: ::core::option::Option<i32>,
     }
+impl ReservedRange {
+                pub fn start_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn end_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+}
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExtensionRangeOptions {
     /// The parser stores options it doesn't recognize here. See above.
     #[prost(message, repeated, tag="999")]
     pub uninterpreted_option: ::prost::alloc::vec::Vec<UninterpretedOption>,
+}
+impl ExtensionRangeOptions {
+        pub fn uninterpreted_option_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// Describes a field within a message.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -171,6 +270,41 @@ pub struct FieldDescriptorProto {
     #[prost(bool, optional, tag="17")]
     pub proto3_optional: ::core::option::Option<bool>,
 }
+impl FieldDescriptorProto {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn number_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn label_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn r#type_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn type_name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn extendee_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn default_value_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn oneof_index_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn json_name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn proto3_optional_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// Nested message and enum types in `FieldDescriptorProto`.
 pub mod field_descriptor_proto {
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -226,6 +360,14 @@ pub struct OneofDescriptorProto {
     #[prost(message, optional, tag="2")]
     pub options: ::core::option::Option<OneofOptions>,
 }
+impl OneofDescriptorProto {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// Describes an enum type.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnumDescriptorProto {
@@ -245,6 +387,23 @@ pub struct EnumDescriptorProto {
     #[prost(string, repeated, tag="5")]
     pub reserved_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+impl EnumDescriptorProto {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn value_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn reserved_range_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn reserved_name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// Nested message and enum types in `EnumDescriptorProto`.
 pub mod enum_descriptor_proto {
     /// Range of reserved numeric values. Reserved values may not be used by
@@ -262,6 +421,14 @@ pub mod enum_descriptor_proto {
         #[prost(int32, optional, tag="2")]
         pub end: ::core::option::Option<i32>,
     }
+impl EnumReservedRange {
+                pub fn start_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn end_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+}
 }
 /// Describes a value within an enum.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -273,6 +440,17 @@ pub struct EnumValueDescriptorProto {
     #[prost(message, optional, tag="3")]
     pub options: ::core::option::Option<EnumValueOptions>,
 }
+impl EnumValueDescriptorProto {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn number_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// Describes a service.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ServiceDescriptorProto {
@@ -282,6 +460,17 @@ pub struct ServiceDescriptorProto {
     pub method: ::prost::alloc::vec::Vec<MethodDescriptorProto>,
     #[prost(message, optional, tag="3")]
     pub options: ::core::option::Option<ServiceOptions>,
+}
+impl ServiceDescriptorProto {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn method_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// Describes a method of a service.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -302,6 +491,26 @@ pub struct MethodDescriptorProto {
     /// Identifies if server streams multiple server messages
     #[prost(bool, optional, tag="6", default="false")]
     pub server_streaming: ::core::option::Option<bool>,
+}
+impl MethodDescriptorProto {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn input_type_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn output_type_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn client_streaming_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn server_streaming_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 // ===================================================================
 // Options
@@ -444,6 +653,74 @@ pub struct FileOptions {
     #[prost(message, repeated, tag="999")]
     pub uninterpreted_option: ::prost::alloc::vec::Vec<UninterpretedOption>,
 }
+impl FileOptions {
+        pub fn java_package_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn java_outer_classname_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn java_multiple_files_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn java_generate_equals_and_hash_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        use ::prost::Message;
+        match E::NUMBER {
+            _ => None
+        }
+    }
+    pub fn java_string_check_utf8_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn optimize_for_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn go_package_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn cc_generic_services_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn java_generic_services_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn py_generic_services_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn php_generic_services_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn deprecated_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn cc_enable_arenas_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn objc_class_prefix_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn csharp_namespace_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn swift_prefix_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn php_class_prefix_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn php_namespace_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn php_metadata_namespace_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn ruby_package_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn uninterpreted_option_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// Nested message and enum types in `FileOptions`.
 pub mod file_options {
     /// Generated classes can be optimized for speed or code size.
@@ -520,6 +797,23 @@ pub struct MessageOptions {
     #[prost(message, repeated, tag="999")]
     pub uninterpreted_option: ::prost::alloc::vec::Vec<UninterpretedOption>,
 }
+impl MessageOptions {
+        pub fn message_set_wire_format_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn no_standard_descriptor_accessor_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn deprecated_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn map_entry_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn uninterpreted_option_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FieldOptions {
     /// The ctype option instructs the C++ code generator to use a different
@@ -590,6 +884,31 @@ pub struct FieldOptions {
     /// The parser stores options it doesn't recognize here. See above.
     #[prost(message, repeated, tag="999")]
     pub uninterpreted_option: ::prost::alloc::vec::Vec<UninterpretedOption>,
+    #[prost(unknown_fields)]
+    pub protobuf_unknown_fields: Vec<::prost::UnknownField>,
+}
+impl FieldOptions {
+        pub fn ctype_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn packed_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn jstype_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn lazy_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn deprecated_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn weak_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn uninterpreted_option_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// Nested message and enum types in `FieldOptions`.
 pub mod field_options {
@@ -618,6 +937,11 @@ pub struct OneofOptions {
     #[prost(message, repeated, tag="999")]
     pub uninterpreted_option: ::prost::alloc::vec::Vec<UninterpretedOption>,
 }
+impl OneofOptions {
+        pub fn uninterpreted_option_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnumOptions {
     /// Set this option to true to allow mapping different tag names to the same
@@ -634,6 +958,17 @@ pub struct EnumOptions {
     #[prost(message, repeated, tag="999")]
     pub uninterpreted_option: ::prost::alloc::vec::Vec<UninterpretedOption>,
 }
+impl EnumOptions {
+        pub fn allow_alias_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn deprecated_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn uninterpreted_option_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnumValueOptions {
     /// Is this enum value deprecated?
@@ -645,6 +980,14 @@ pub struct EnumValueOptions {
     /// The parser stores options it doesn't recognize here. See above.
     #[prost(message, repeated, tag="999")]
     pub uninterpreted_option: ::prost::alloc::vec::Vec<UninterpretedOption>,
+}
+impl EnumValueOptions {
+        pub fn deprecated_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn uninterpreted_option_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ServiceOptions {
@@ -662,6 +1005,14 @@ pub struct ServiceOptions {
     /// The parser stores options it doesn't recognize here. See above.
     #[prost(message, repeated, tag="999")]
     pub uninterpreted_option: ::prost::alloc::vec::Vec<UninterpretedOption>,
+}
+impl ServiceOptions {
+        pub fn deprecated_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn uninterpreted_option_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MethodOptions {
@@ -681,6 +1032,17 @@ pub struct MethodOptions {
     /// The parser stores options it doesn't recognize here. See above.
     #[prost(message, repeated, tag="999")]
     pub uninterpreted_option: ::prost::alloc::vec::Vec<UninterpretedOption>,
+}
+impl MethodOptions {
+        pub fn deprecated_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn idempotency_level_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn uninterpreted_option_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// Nested message and enum types in `MethodOptions`.
 pub mod method_options {
@@ -722,6 +1084,29 @@ pub struct UninterpretedOption {
     #[prost(string, optional, tag="8")]
     pub aggregate_value: ::core::option::Option<::prost::alloc::string::String>,
 }
+impl UninterpretedOption {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn identifier_value_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn positive_int_value_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn negative_int_value_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn double_value_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn string_value_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn aggregate_value_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// Nested message and enum types in `UninterpretedOption`.
 pub mod uninterpreted_option {
     /// The name of the uninterpreted option.  Each string represents a segment in
@@ -736,6 +1121,14 @@ pub mod uninterpreted_option {
         #[prost(bool, required, tag="2")]
         pub is_extension: bool,
     }
+impl NamePart {
+                pub fn name_part_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn is_extension_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+}
 }
 // ===================================================================
 // Optional source code info
@@ -789,6 +1182,11 @@ pub struct SourceCodeInfo {
     ///   be recorded in the future.
     #[prost(message, repeated, tag="1")]
     pub location: ::prost::alloc::vec::Vec<source_code_info::Location>,
+}
+impl SourceCodeInfo {
+        pub fn location_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// Nested message and enum types in `SourceCodeInfo`.
 pub mod source_code_info {
@@ -880,6 +1278,29 @@ pub mod source_code_info {
         #[prost(string, repeated, tag="6")]
         pub leading_detached_comments: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
+impl Location {
+                pub fn path_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            use ::prost::Message;
+            match E::NUMBER {
+                _ => None
+            }
+        }
+        pub fn span_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            use ::prost::Message;
+            match E::NUMBER {
+                _ => None
+            }
+        }
+        pub fn leading_comments_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn trailing_comments_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn leading_detached_comments_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+}
 }
 /// Describes the relationship between generated code and its original source
 /// file. A GeneratedCodeInfo message is associated with only one generated
@@ -890,6 +1311,11 @@ pub struct GeneratedCodeInfo {
     /// of its generating .proto file.
     #[prost(message, repeated, tag="1")]
     pub annotation: ::prost::alloc::vec::Vec<generated_code_info::Annotation>,
+}
+impl GeneratedCodeInfo {
+        pub fn annotation_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// Nested message and enum types in `GeneratedCodeInfo`.
 pub mod generated_code_info {
@@ -912,6 +1338,23 @@ pub mod generated_code_info {
         #[prost(int32, optional, tag="4")]
         pub end: ::core::option::Option<i32>,
     }
+impl Annotation {
+                pub fn path_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            use ::prost::Message;
+            match E::NUMBER {
+                _ => None
+            }
+        }
+        pub fn source_file_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn begin_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+        pub fn end_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+            None
+        }
+}
 }
 /// `Any` contains an arbitrary serialized protocol buffer message along with a
 /// URL that describes the type of the serialized message.
@@ -1032,6 +1475,14 @@ pub struct Any {
     #[prost(bytes="vec", tag="2")]
     pub value: ::prost::alloc::vec::Vec<u8>,
 }
+impl Any {
+        pub fn type_url_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn value_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// `SourceContext` represents information about the source of a
 /// protobuf element, like the file in which it is defined.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1040,6 +1491,11 @@ pub struct SourceContext {
     /// protobuf element.  For example: `"google/protobuf/source_context.proto"`.
     #[prost(string, tag="1")]
     pub file_name: ::prost::alloc::string::String,
+}
+impl SourceContext {
+        pub fn file_name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// A protocol buffer message type.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1062,6 +1518,26 @@ pub struct Type {
     /// The source syntax.
     #[prost(enumeration="Syntax", tag="6")]
     pub syntax: i32,
+}
+impl Type {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn fields_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn oneofs_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn source_context_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn syntax_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// A single field of a message type.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1098,6 +1574,38 @@ pub struct Field {
     /// The string value of the default value of this field. Proto2 syntax only.
     #[prost(string, tag="11")]
     pub default_value: ::prost::alloc::string::String,
+}
+impl Field {
+        pub fn kind_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn cardinality_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn number_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn type_url_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn oneof_index_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn packed_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn json_name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn default_value_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// Nested message and enum types in `Field`.
 pub mod field {
@@ -1177,6 +1685,23 @@ pub struct Enum {
     #[prost(enumeration="Syntax", tag="5")]
     pub syntax: i32,
 }
+impl Enum {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn enumvalue_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn source_context_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn syntax_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// Enum value definition.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnumValue {
@@ -1189,6 +1714,17 @@ pub struct EnumValue {
     /// Protocol buffer options.
     #[prost(message, repeated, tag="3")]
     pub options: ::prost::alloc::vec::Vec<Option>,
+}
+impl EnumValue {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn number_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// A protocol buffer option, which can be attached to a message, field,
 /// enumeration, etc.
@@ -1206,6 +1742,14 @@ pub struct Option {
     /// value using the google.protobuf.Int32Value type.
     #[prost(message, optional, tag="2")]
     pub value: ::core::option::Option<Any>,
+}
+impl Option {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn value_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// The syntax in which a protocol buffer element is defined.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1271,6 +1815,29 @@ pub struct Api {
     #[prost(enumeration="Syntax", tag="7")]
     pub syntax: i32,
 }
+impl Api {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn methods_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn version_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn source_context_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn mixins_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn syntax_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// Method represents a method of an API interface.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Method {
@@ -1295,6 +1862,29 @@ pub struct Method {
     /// The source syntax of this method.
     #[prost(enumeration="Syntax", tag="7")]
     pub syntax: i32,
+}
+impl Method {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn request_type_url_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn request_streaming_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn response_type_url_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn response_streaming_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn options_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn syntax_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// Declares an API Interface to be included in this interface. The including
 /// interface must redeclare all the methods from the included interface, but
@@ -1384,6 +1974,14 @@ pub struct Mixin {
     #[prost(string, tag="2")]
     pub root: ::prost::alloc::string::String,
 }
+impl Mixin {
+        pub fn name_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn root_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// A Duration represents a signed, fixed-length span of time represented
 /// as a count of seconds and fractions of seconds at nanosecond
 /// resolution. It is independent of any calendar and concepts like "day"
@@ -1459,6 +2057,14 @@ pub struct Duration {
     /// to +999,999,999 inclusive.
     #[prost(int32, tag="2")]
     pub nanos: i32,
+}
+impl Duration {
+        pub fn seconds_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn nanos_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// `FieldMask` represents a set of symbolic field paths, for example:
 ///
@@ -1665,6 +2271,11 @@ pub struct FieldMask {
     #[prost(string, repeated, tag="1")]
     pub paths: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+impl FieldMask {
+        pub fn paths_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// `Struct` represents a structured data value, consisting of fields
 /// which map to dynamically typed values. In some languages, `Struct`
 /// might be supported by a native representation. For example, in
@@ -1679,6 +2290,11 @@ pub struct Struct {
     #[prost(btree_map="string, message", tag="1")]
     pub fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, Value>,
 }
+impl Struct {
+        pub fn fields_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+}
 /// `Value` represents a dynamically typed value which can be either
 /// null, a number, a string, a boolean, a recursive struct value, or a
 /// list of values. A producer of value is expected to set one of that
@@ -1691,6 +2307,8 @@ pub struct Value {
     #[prost(oneof="value::Kind", tags="1, 2, 3, 4, 5, 6")]
     pub kind: ::core::option::Option<value::Kind>,
 }
+impl Value {
+    }
 /// Nested message and enum types in `Value`.
 pub mod value {
     /// The kind of value.
@@ -1724,6 +2342,11 @@ pub struct ListValue {
     /// Repeated field of dynamically typed values.
     #[prost(message, repeated, tag="1")]
     pub values: ::prost::alloc::vec::Vec<Value>,
+}
+impl ListValue {
+        pub fn values_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
 /// `NullValue` is a singleton enumeration to represent the null value for the
 /// `Value` type union.
@@ -1841,4 +2464,12 @@ pub struct Timestamp {
     /// inclusive.
     #[prost(int32, tag="2")]
     pub nanos: i32,
+}
+impl Timestamp {
+        pub fn seconds_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
+    pub fn nanos_ext<E>() -> ::std::option::Option<E::Value> where E: ::prost::Extension {
+        None
+    }
 }
